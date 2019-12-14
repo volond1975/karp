@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_blank">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Google File Upload by CTRLQ.org</title>
+    <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+    <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+    
+    <script src="https://cdn.jsdelivr.net/npm/jquery-mask-plugin@1.14.8/dist/jquery.mask.min.j" stype="text/javascript"></script>
+    <style>
+      .disclaimer{width: 480px; color:#646464;margin:20px auto;padding:0 16px;text-align:center;font:400 12px Roboto,Helvetica,Arial,sans-serif}.disclaimer a{color:#009688}#credit{display:none}
+    </style>
+    
+    
+    
+  </head>
+ <body onload="addList();">
+
+  <form class="main" id="myform" novalidate="novalidate" style="max-width: 720px;margin: 40px auto;" action="" onsubmit="return false">
+    <div class="row">
+      <div class="col s12">
+        <h5 class="center-align teal-text">Лучшая тусовка этой зимы!</h5>
+        <h4 class="center-align teal-text">SNOW PARTY</h4>
+        <h6 class="center-align teal-text ">С помощью этой формы вы сможете узнать информацию по Вашей брони</h6>
+        
+      </div>
+    </div>
+    <div class = "card-panel"> 
+        <div class="input-field col s12">
+<i class = "material-icons">train</i> <h5 class="center-align teal-text  ">Выберете номер Вашего заезда в поле ниже</h5>
+            <input list="List" name="eventList" autocorrect="off" placeholder="Выберите заезд" id="train" required>
+               <datalist id="List"> 
+                  <option>Loading...</option>       
+               </datalist>
+        
+        </div>
+       
+<div class="input-field col s12">
+   <h5 class="center-align teal-text  ">Телефон вводите в формате 380ххххххххх ,без "+"</h5>
+ </div>
+    <div class="input-field col s12">
+        <i class="material-icons prefix">phone</i> 
+        <input id="phone" name="phone" type="tel-national" autocorrect="off" autocomplete="tel" placeholder="380672535702" required>
+       
+    </div>
+          </div>
+
+    
+        <div class="row">
+            <div class="col s6">
+                <button class="btn brown darken-3 waves-effect waves-light red"  type="submit" onmouseup="reset()">Очистить форму
+                    <i class="material-icons right">settings_backup_restore</i>
+                </button>
+            </div>
+            <div class="col s6">
+                <button class="btn brown darken-3 waves-effect waves-light blue" id ="send" type="submit" name="send" onmouseup="submittington()">Получить информацию
+                    <i class="material-icons right">send</i>
+                </button>
+            </div>
+            
+        </div>
+     <div class = "card-panel"> 
+ <h5 class="center-align teal-text  ">Для очистки формы нажмите "Очистить форму" </h5>
+  </div>    
+  </form>
+    <div id="output" style="max-width: 720px;margin: 40px auto;">
+     <div id="outputCard" class="card-panel">
+      <div class="col s12"> <div id="userInfo" class="card-panel"><h5 class="left-align teal-text">Информация о Вас по номеру телефона указаному при регистрации</h5></div></div>
+     <div class="col s12"> <div id="userPrice" class="card-panel"><h5 class="left-align teal-text">Информация об оплате</h5></div></div>
+    </div>
+     </div>
+     <div class="row">
+     <div class="col s12">
+<ul class="contact-info">
+
+<li><a href="https://t.me/volond"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Desing by @volond 2020</font></font></a></li>
+</ul>
+      </div>
+    </div>    
+ <script>
+ function addList() {
+         google.script.run.withSuccessHandler(writeList).withFailureHandler(onFail) 
+           .getTrainList();
+  }     
+ function writeList(list) {
+      var dropdown = $("#List");
+   
+      dropdown.empty();
+      var options = JSON.parse(list); //Modified
+      var sortOpt = options.sort();
+         if (options.length > 0) {
+             for ( var i = 0; i < sortOpt.length; i++) {
+                
+                   dropdown.append('<option>' + sortOpt[i] + '</option>');
+             }
+         }
+    
+   }
+  
+  function onFail() {
+    alert("This action failed to complete.");
+  }     
+ function submittington(){
+       //On clicking the button it is disabled. 
+     var  userForm={}
+  //  var userForm['phone'] = $('#phone').val()
+ //   var userForm['train'] = $('#train').val()
+   alert( $('#train').val())
+// alert( $('#phone').val())
+ google.script.run.withSuccessHandler(fileUploaded).withFailureHandler(onFail).getUserTableInfo($('#phone').val(),$('#train').val());
+                    
+                  
+       
+      
+    }
+    
+    function reset() {
+    alert( $('#userInfo').val())
+   $('#phone').val('')
+   $('#train').val('') 
+   var def='<div class="col s12"> <div id="userInfo" class="card-panel"><h5 class="left-align teal-text">Информация о Вас по номеру телефона указаному при регистрации</h5></div></div>'+
+   '<div class="col s12"> <div id="userPrice" class="card-panel"><h5 class="left-align teal-text">Информация об оплате</h5></div></div>'
+ document.getElementById('outputCard').innerHTMLL = def;
+   
+    }
+  
+    function fileUploaded(status) {
+   
+    
+     var jsonStatus=JSON.parse(status);  
+        //document.getElementById('userInfo').innerHTML = jsonStatus.userInfo;
+       // document.getElementById('userPrice').innerHTML = jsonStatus.userPrice;
+       
+       document.getElementById('outputCard').innerHTML = jsonStatus.userInfo
+    }
+</script>  
+  
+
+
+
+
+
+
+ 
+</body>
+ 
+</html>
